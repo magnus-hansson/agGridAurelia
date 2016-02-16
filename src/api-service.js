@@ -26,7 +26,7 @@ export class ApiService {
     }
 
     getPlans(season) {
-        return this.http.fetch('planapi/' + season)
+        return this.http.fetch('planapi/planb/' + season)
             .then(response => response.json())
             .then(data => {
 
