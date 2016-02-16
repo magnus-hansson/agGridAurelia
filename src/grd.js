@@ -22,8 +22,19 @@ export class Welcome {
             { headerName: "ShortHomebound", field: "ShortHomebound", width: 110 },
             { headerName: "Destination", field: "Destination", cellStyle: { color: 'darkred' }, width: 90 },
             { headerName: "Resort", field: "Resort", width: 90 },
-            { headerName: "AirportCode", field: "AirportCode", width: 90 },
-            { headerName: "TripName", field: "TripName", width: 90 },
+            { headerName: "AirportCode", field: "AirportCode", width: 90, template: '<span style="font-weight: bold;" if.bind="data.Dirty">IsDirty</span> '},
+            { 
+                headerName: "TripName",
+                 field: "TripName",
+                  width: 90,
+                  cellStyle: function(params) {
+                        if (params.data.Dirty) {
+                        //mark police cells as red
+                            return {color: 'red', backgroundColor: 'green'};
+                        } else {
+                            return null;
+                        }
+                    }},
         ];
     }
 
@@ -51,36 +62,10 @@ export class Welcome {
 
 
     submit() {
-        //this.gridOptions.columnApi.sizeColumnsToFit(400);
-        
-        /*
-        var allColumnIds = [];
-        this.columnDefs.forEach(function (columnDef) {
-            allColumnIds.push(columnDef.field);
-        });
-        this.gridOptions.columnApi.autoSizeColumns(allColumnIds);
-*/
-        //console.log(this.plans);
-        //         let col = this.gridOptions.columnApi.getColumn('TripName');
-        //         this.gridOptions.columnApi.setColumnVisible('TripName', !col);
-        //         this.gridOptions.api.refreshView();
-        // 
-        //         // get the grid to space out it's columns
-        //         this.gridOptions.columnApi.sizeColumnsToFit();
-        //this.api.sizeColumnsToFit();
-        
-        //this.gridOptions.columnApi.setColumnVisible('TripName', false);
-        // this.apiService.getPlans('A')
-        //     .then(plans => this.plans = plans)
-        //     .then(() => console.log('got new plans', this.plans.length))
-        //     .then(() => this.grid.setRowData(this.plans))
-        //     .catch(error => {
-        //         console.log(error.response);
-        //     });
         //Set grid to new season
         // this.grid.setRowData(newRows)
-       
-
+        let dirtyRows = this.plans.filter(row => row.Dirty === true);
+        console.log('dirtyes', dirtyRows);
     }
 
     initGrid() {
@@ -125,7 +110,6 @@ export class Welcome {
                     if(eSelect.options[i].text == eLabel.nodeValue ){
                         eSelect.options[i].selected = true;
                         break;
-                        
                     }
                 }
                 
@@ -143,25 +127,29 @@ export class Welcome {
                 eCell.appendChild(eLabel);
             }
         });
-
-        eSelect.addEventListener('change', function () {
-
-            if (editing) {
-                editing = false;
-                var newValue = eSelect.value;
-                var newLabel = eSelect.selectedOptions[0].innerText
-                params.data[params.colDef.field] = newValue;
-                params.data["GuideName"] = newLabel;
-
-                eLabel.nodeValue = newLabel;
-                eCell.removeChild(eSelect);
-                eCell.appendChild(eLabel);
-            }
-        });
+        eSelect.addEventListener('change', evt => {this.changeListener(evt)});
+        // eSelect.addEventListener('change', function (e) {
+        //     var a = e;
+        //     if (editing) {
+        //         editing = false;
+        //         var newValue = eSelect.value;
+        //         var newLabel = eSelect.selectedOptions[0].innerText
+        //         params.data[params.colDef.field] = newValue;
+        //         params.data["GuideName"] = newLabel;
+        //         params.data["Dirty"] = true;
+        //         eLabel.nodeValue = newLabel;
+        //         eCell.removeChild(eSelect);
+        //         eCell.appendChild(eLabel);
+        //         
+        //     }
+        //});
         return eCell;
     }
 
-
+changeListener(evt){
+    //move shit here
+    console.log(evt);
+}
 
     
 
