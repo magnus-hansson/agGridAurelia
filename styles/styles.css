@@ -174,3 +174,7 @@ div.au-stagger {
   }
 }
 
+.dirty {
+    background-color: lightpink !important;
+}
+

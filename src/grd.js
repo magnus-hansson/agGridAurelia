@@ -17,24 +17,19 @@ export class Welcome {
 
         this.columnDefs = [
             { headerName: "GuideId", field: "GuideId", valueGetter: this.guideValueGetter.bind(this), cellRenderer: this.guideEditor2.bind(this), width: 90 },
-           // { headerName: "GuideName", field: "GuideName", cellRenderer: this.guideEditor.bind(this), width: 90 },
+            // { headerName: "GuideName", field: "GuideName", cellRenderer: this.guideEditor.bind(this), width: 90 },
             { headerName: "ShortOutbound", field: "ShortOutbound", width: 110 },
             { headerName: "ShortHomebound", field: "ShortHomebound", width: 110 },
             { headerName: "Destination", field: "Destination", cellStyle: { color: 'darkred' }, width: 90 },
             { headerName: "Resort", field: "Resort", width: 90 },
-            { headerName: "AirportCode", field: "AirportCode", width: 90, template: '<span style="font-weight: bold;" if.bind="data.Dirty">IsDirty</span> '},
-            { 
+            { headerName: "AirportCode", field: "AirportCode", width: 90, template: '<span style="font-weight: bold;" if.bind="data.Dirty">IsDirty</span> ' },
+            {
                 headerName: "TripName",
-                 field: "TripName",
-                  width: 90,
-                  cellStyle: function(params) {
-                        if (params.data.Dirty) {
-                        //mark police cells as red
-                            return {color: 'red', backgroundColor: 'green'};
-                        } else {
-                            return null;
-                        }
-                    }},
+                field: "TripName",
+                width: 90,
+                cellClass: function(params) { return (params.data.Dirty == true ?'dirty':'my-class-2'); }
+               
+            },
         ];
     }
 
@@ -80,7 +75,7 @@ export class Welcome {
 
         var eGridDiv = document.querySelector('#myGrid');
         this.grid = new Grid(eGridDiv, this.gridOptions);
-        
+
 
     }
 
@@ -107,12 +102,12 @@ export class Welcome {
         eCell.addEventListener('click', function () {
             if (!editing) {
                 for (let i = 0; i < eSelect.options.length; i++) {
-                    if(eSelect.options[i].text == eLabel.nodeValue ){
+                    if (eSelect.options[i].text == eLabel.nodeValue) {
                         eSelect.options[i].selected = true;
                         break;
                     }
                 }
-                
+
                 eCell.removeChild(eLabel);
                 eCell.appendChild(eSelect);
                 eSelect.focus();
@@ -124,10 +119,11 @@ export class Welcome {
             if (editing) {
                 editing = false;
                 eCell.removeChild(eSelect);
+                console.log('removed eSelect')
                 eCell.appendChild(eLabel);
             }
         });
-        eSelect.addEventListener('change', evt => {this.changeListener(evt)});
+        eSelect.addEventListener('change', evt => { this.changeListener(evt, params, eCell, eLabel, editing) });
         // eSelect.addEventListener('change', function (e) {
         //     var a = e;
         //     if (editing) {
@@ -146,12 +142,26 @@ export class Welcome {
         return eCell;
     }
 
-changeListener(evt){
-    //move shit here
-    console.log(evt);
-}
+    changeListener(evt, params, eCell, eLabel, editing) {
+        if (editing) {
+            let newValue = evt.target.value;
+            let newLabel = evt.target.selectedOptions[0].innerText
+            params.data[params.colDef.field] = newValue;
+            params.data["GuideName"] = newLabel;
+            params.data["Dirty"] = true;
+            eLabel.nodeValue = newLabel;
+            
+            //removed remove since blur also removes
+            //eCell.removeChild(evt.target);
+                    
+            eCell.appendChild(eLabel);
+            editing = false;
+            this.grid.refreshBody();
+        }
 
-    
+    }
+
+
 
     onSelectionChanged() {
         console.log(this.api.getSelectedRows());
