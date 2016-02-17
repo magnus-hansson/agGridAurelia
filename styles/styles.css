@@ -178,3 +178,6 @@ div.au-stagger {
     background-color: lightpink !important;
 }
 
+.prewrp {
+    white-space: pre-wrap;
+}

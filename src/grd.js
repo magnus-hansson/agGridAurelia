@@ -10,25 +10,26 @@ export class Welcome {
         this.plans = [];
         this.guides = [];
         this.gridOptions = {
-            rowSelection: 'multiple',
-            enableColResize: true,
-            onSelectionChanged: this.onSelectionChanged,
+            //rowSelection: 'single',
+            
+            //onSelectionChanged: this.onSelectionChanged,
         };
 
         this.columnDefs = [
-            { headerName: "GuideId", field: "GuideId", valueGetter: this.guideValueGetter.bind(this), cellRenderer: this.guideEditor2.bind(this), width: 90 },
+            { headerName: "GuideId", field: "GuideId", valueGetter: this.guideValueGetter.bind(this), cellRenderer: this.guideDropdown.bind(this), width: 90, sortingOrder: ['asc','desc'] },
             // { headerName: "GuideName", field: "GuideName", cellRenderer: this.guideEditor.bind(this), width: 90 },
-            { headerName: "ShortOutbound", field: "ShortOutbound", width: 110 },
+            { headerName: "ShortOutbound", field: "ShortOutbound", width: 110 , sortingOrder: ['asc','desc']},
             { headerName: "ShortHomebound", field: "ShortHomebound", width: 110 },
-            { headerName: "Destination", field: "Destination", cellStyle: { color: 'darkred' }, width: 90 },
-            { headerName: "Resort", field: "Resort", width: 90 },
-            { headerName: "AirportCode", field: "AirportCode", width: 90, template: '<span style="font-weight: bold;" if.bind="data.Dirty">IsDirty</span> ' },
-            {
-                headerName: "TripName",
+            { headerName: "Destination", field: "Destination", cellStyle: { color: 'darkred' }, width: 90 , sortingOrder: ['asc','desc']},
+            { headerName: "Resort", field: "Resort", width: 90 , sortingOrder: ['asc','desc']},
+            { headerName: "AirportCode", field: "AirportCode", width: 90, hide: true },
+            { headerName: "PrintPnr", field: "PrintPnr", width: 90 ,  cellRenderer: this.pnrEditor.bind(this)},
+            {   headerName: "TripName",
+                volatile:true,
                 field: "TripName",
                 width: 90,
-                cellClass: function(params) { return (params.data.Dirty == true ?'dirty':'my-class-2'); }
-               
+                cellClass: function (params) { return (params.data.Dirty == true ? 'dirty' : 'my-class-2'); }
+
             },
         ];
     }
@@ -67,20 +68,39 @@ export class Welcome {
 
         this.gridOptions = {
             columnDefs: this.columnDefs,
-            rowSelection: 'multiple',
+            rowSelection: 'single',
             onSelectionChanged: this.onSelectionChanged,
+            enableColResize: true,
             enableFilter: true,
+            enableSorting: true,
             rowData: this.plans
         };
 
         var eGridDiv = document.querySelector('#myGrid');
         this.grid = new Grid(eGridDiv, this.gridOptions);
+        this.gridOptions.api.sizeColumnsToFit();
 
+
+    }
+    
+    pnrEditor(params){
+      
+        var eCell = document.createElement('div');
+        eCell.className = "prewrp";
+        eCell.setAttribute('contenteditable', 'true');
+        eCell.setAttribute('title',params.value);
+        //eCell.className = "prewrap";
+        eCell.innerHTML = params.value;
+        
+        
+        eCell.addEventListener('blur', evt => { this.blurPnrListener(evt, params, eCell) });
+        return eCell;
+        
 
     }
 
     //GuideEditor for Editing of Id
-    guideEditor2(params) {
+    guideDropdown(params) {
         var editing = false;
 
         var eCell = document.createElement('span');
@@ -124,21 +144,7 @@ export class Welcome {
             }
         });
         eSelect.addEventListener('change', evt => { this.changeListener(evt, params, eCell, eLabel, editing) });
-        // eSelect.addEventListener('change', function (e) {
-        //     var a = e;
-        //     if (editing) {
-        //         editing = false;
-        //         var newValue = eSelect.value;
-        //         var newLabel = eSelect.selectedOptions[0].innerText
-        //         params.data[params.colDef.field] = newValue;
-        //         params.data["GuideName"] = newLabel;
-        //         params.data["Dirty"] = true;
-        //         eLabel.nodeValue = newLabel;
-        //         eCell.removeChild(eSelect);
-        //         eCell.appendChild(eLabel);
-        //         
-        //     }
-        //});
+       
         return eCell;
     }
 
@@ -158,13 +164,22 @@ export class Welcome {
             editing = false;
             this.grid.refreshBody();
         }
-
     }
 
+    blurPnrListener(evt, params, eCell){
+        if(evt.target.innerText !== params.data.PrintPnr){
+            params.data['PrintPnr'] = evt.target.innerText;
+            params.data["Dirty"] = true;
+            console.log('prn changed');
+            this.grid.refreshBody();
+        }else{
+            console.log('no change');
+        }
+    }   
 
 
     onSelectionChanged() {
-        console.log(this.api.getSelectedRows());
+        //console.log(this.api.getSelectedRows());
     }
 
     canDeactivate() {
@@ -172,77 +187,10 @@ export class Welcome {
             return confirm('Are you sure you want to leave?');
         }
     }
-    
-    // findGuideNameById(id){
-    //     let guideObj = this.guides.find(x => x.Id === Number.parseInt(id));
-    //     if(guideObj !== undefined){
-    //         return guideObj.GuideName;
-    //     }else {
-    //     return 'Not found';
-    //     }
-    //     
-    // }
-}
+ }
 
 export class UpperValueConverter {
     toView(value) {
         return value && value.toUpperCase();
     }
 }
-
-
-
-
-// guideEditor(params) {
-//         var editing = false;
-// 
-//         var eCell = document.createElement('span');
-// 
-//         var eLabel = document.createTextNode(params.data.GuideName);
-//         eCell.appendChild(eLabel);
-// 
-//         var eSelect = document.createElement("select");
-//         //Funny use of .bind to get this to tag along in a orderly fashion
-//         //var find = this.findGuideNameById.bind(this);
-//         this.guides.forEach(function (item) {
-//             var eOption = document.createElement("option");
-//             eOption.setAttribute("value", item.GuideName);
-//             eOption.innerHTML = item.GuideName;
-//             eSelect.appendChild(eOption);
-//         });
-// 
-//         eSelect.value = params.value;
-// 
-//         eCell.addEventListener('click', function () {
-//             if (!editing) {
-//                 eCell.removeChild(eLabel);
-//                 eCell.appendChild(eSelect);
-//                 eSelect.focus();
-//                 editing = true;
-//             }
-//         });
-// 
-//         eSelect.addEventListener('blur', function () {
-//             if (editing) {
-//                 editing = false;
-//                 eCell.removeChild(eSelect);
-//                 eCell.appendChild(eLabel);
-//             }
-//         });
-// 
-//         eSelect.addEventListener('change', function () {
-// 
-//             if (editing) {
-//                 editing = false;
-//                 var newValue = eSelect.value;
-//                 var newLabel = eSelect.selectedOptions[0].innerText
-//                 params.data[params.colDef.field] = newValue;
-//                 params.data["GuideName"] = newLabel;
-// 
-//                 eLabel.nodeValue = newLabel;
-//                 eCell.removeChild(eSelect);
-//                 eCell.appendChild(eLabel);
-//             }
-//         });
-//         return eCell;
-//     }
