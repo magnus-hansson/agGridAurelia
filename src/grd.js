@@ -9,21 +9,16 @@ export class Welcome {
         this.apiService = apiService;
         this.plans = [];
         this.guides = [];
-        this.gridOptions = {
-            //rowSelection: 'single',
-            
-            //onSelectionChanged: this.onSelectionChanged,
-        };
+        this.gridOptions = {};
 
         this.columnDefs = [
-            { headerName: "GuideId", field: "GuideId", valueGetter: this.guideValueGetter.bind(this), cellRenderer: this.guideDropdown.bind(this), width: 90, sortingOrder: ['asc','desc'] },
-            // { headerName: "GuideName", field: "GuideName", cellRenderer: this.guideEditor.bind(this), width: 90 },
-            { headerName: "ShortOutbound", field: "ShortOutbound", width: 110 , sortingOrder: ['asc','desc']},
-            { headerName: "ShortHomebound", field: "ShortHomebound", width: 110 },
-            { headerName: "Destination", field: "Destination", cellStyle: { color: 'darkred' }, width: 90 , sortingOrder: ['asc','desc']},
-            { headerName: "Resort", field: "Resort", width: 90 , sortingOrder: ['asc','desc']},
+            { headerName: "GuideId", field: "GuideId", valueGetter: this.guideValueGetter.bind(this), cellRenderer: this.guideDropdown.bind(this), width: 90, sortingOrder: ['asc','desc'], hide: false},
+            { headerName: "ShortOutbound", field: "ShortOutbound", width: 110 , sortingOrder: ['asc','desc'], hide: false},
+            { headerName: "ShortHomebound", field: "ShortHomebound", width: 110 , hide: false},
+            { headerName: "Destination", field: "Destination", cellStyle: { color: 'darkred' }, width: 90 , sortingOrder: ['asc','desc'], hide: false},
+            { headerName: "Resort", field: "Resort", width: 90 , sortingOrder: ['asc','desc'], hide: false},
             { headerName: "AirportCode", field: "AirportCode", width: 90, hide: true },
-            { headerName: "PrintPnr", field: "PrintPnr", width: 90 ,  cellRenderer: this.pnrEditor.bind(this)},
+            { headerName: "PrintPnr", field: "PrintPnr", width: 90 ,  cellRenderer: this.pnrEditor.bind(this), hide: false},
             {   headerName: "TripName",
                 volatile:true,
                 field: "TripName",
@@ -44,6 +39,13 @@ export class Welcome {
         }
     }
 
+    selectVisibleCol(col){
+        console.log('change visibility for col ', col)
+        //col.hide = !col.hide;
+        this.gridOptions.columnApi.setColumnVisible(col.field, !!col.hide);
+        col.hide = !col.hide;
+    }
+    
     activate() {
 
         this.apiService.getPlans('A')
@@ -63,7 +65,11 @@ export class Welcome {
         let dirtyRows = this.plans.filter(row => row.Dirty === true);
         console.log('dirtyes', dirtyRows);
     }
-
+    
+    hideCol(){
+        console.log('hide');
+    }
+    
     initGrid() {
 
         this.gridOptions = {

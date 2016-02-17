@@ -1,11 +1,26 @@
 <template>
     <section class="au-animate">
-        <h2></h2>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary" title="Selected countries ${selectedCountryNames()}" dropdown-toggle"" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-globe"></i></button>
+                    <button type="button" class="btn btn-primary dropdown-toggle" title="Select countries" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu" style="margin-left:10px">
+                        <li repeat.for="col of columnDefs" click.delegate="$parent.selectVisibleCol(col)">
+                            <a href="#" class="small" data-value="${col.headerName}" tabIndex="-1">
+                                <i class="fa fa fa-check-square-o" if.bind="!col.hide"></i>
+                                <i class="fa fa fa-square-o" if.bind="col.hide"></i> ${col.headerName}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+        
         <div id="myGrid" style="height: 800px;" class="ag-blue"></div>
-
 
         <form role="form" submit.delegate="submit()">
             <button type="submit" class="btn btn-default">Submit</button>
         </form>
+        <button class="btn btn-success" click.delegate="hideCol()">Hide a col</button>
     </section>
 </template>
