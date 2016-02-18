@@ -10,7 +10,7 @@
                         <li repeat.for="col of columnDefs" click.delegate="$parent.selectVisibleCol(col)">
                             <a href="#" class="small" data-value="${col.headerName}" tabIndex="-1">
                                 <i class="fa fa fa-check-square-o" if.bind="!col.hide"></i>
-                                <i class="fa fa fa-square-o" if.bind="col.hide"></i> ${col.headerName}
+                                <i class="fa fa fa-square-o" if.bind="col.hide"></i> ${col.headerName} 
                             </a>
                         </li>
                     </ul>

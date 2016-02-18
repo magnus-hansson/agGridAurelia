@@ -33,7 +33,7 @@ export class ApiService {
                 return data;
             });
     }
-    
+
     getGuides(season) {
         return this.http.fetch('guideapi/')
             .then(response => response.json())
