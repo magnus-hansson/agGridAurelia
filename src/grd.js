@@ -15,22 +15,44 @@ export class Welcome {
         this.TravelPlanOptions = ['x', 'Pågående', 'Klar'];
         this.columnDefs = [
             { headerName: "C", field: "Cancelled", width: 30, hide: false, cellClass: this.cellBgColor, cellRenderer:this.checkboxEditor.bind(this) },
-            { headerName: "GuideId", field: "GuideId", valueGetter: this.guideValueGetter.bind(this), cellRenderer: this.guideDropdown.bind(this), width: 70, sortingOrder: ['asc', 'desc'], hide: false, cellClass: this.cellBgColor },
-            { headerName: "Status", field: "Status", cellRenderer: this.genDropDown.bind(this), width: 40, sortingOrder: ['asc', 'desc'], hide: false, cellClass: this.cellBgColor, optionValues: this.StatusOptions },
-            { headerName: "Stud", field: "StudId", valueGetter: this.studValueGetter.bind(this), cellRenderer: this.guideDropdown.bind(this), width: 70, sortingOrder: ['asc', 'desc'], hide: false, cellClass: this.cellBgColor },
-            { headerName: "Stud status", field: "StudOK", cellRenderer: this.genDropDown.bind(this), width: 40, sortingOrder: ['asc', 'desc'], hide: false, cellClass: this.cellBgColor, optionValues: this.StatusOptions },
-            { headerName: "Outbound", field: "ShortOutbound", width: 30, sortingOrder: ['asc', 'desc'], hide: false, cellClass: this.cellBgColor },
-            { headerName: "Homebound", field: "ShortHomebound", width: 30, hide: false, cellClass: this.cellBgColor },
-            { headerName: "Dest", field: "Destination", cellStyle: { color: 'darkred' }, width: 30, sortingOrder: ['asc', 'desc'], hide: false, cellClass: this.cellBgColor },
-            { headerName: "Tour", field: "Resort", width: 30, sortingOrder: ['asc', 'desc'], hide: false, cellClass: this.cellBgColor },
-            { headerName: "Tour type", field: "TourType", cellRenderer: this.genDropDown.bind(this), width: 30, sortingOrder: ['asc', 'desc'], hide: false, cellClass: this.cellBgColor, optionValues: this.TourtypeOptions },
-            { headerName: "Travel plan", field: "TravelPlanOk", cellRenderer: this.genDropDown.bind(this), width: 30, sortingOrder: ['asc', 'desc'], hide: false, cellClass: this.cellBgColor, optionValues: this.TravelPlanOptions },
-            { headerName: "Airport", field: "AirportCode", width: 40, editable: true, newValueHandler: this.textValueChangedHandler.bind(this), hide: true, cellClass: this.cellBgColor },
+            { headerName: "TripName", field: "TripName", width: 90, hide: true, cellClass: this.cellBgColor },
             { headerName: "Season", field: "SeasonDescription", width: 33, hide: false, cellClass: this.cellBgColor },
             { headerName: "Nat", field: "Nat", width: 30, hide: false, cellClass: this.cellBgColor },
             { headerName: "Prod", field: "Producent", width: 30, hide: false, cellClass: this.cellBgColor },
-            { headerName: "PrintPnr", field: "PrintPnr", width: 90, cellRenderer: this.pnrEditor.bind(this), hide: false, cellClass: this.cellBgColor },
-            { headerName: "TripName", field: "TripName", width: 90, hide: true, cellClass: this.cellBgColor },
+            { headerName: "PP", field: "Personalplanering", width: 30, hide: false, cellClass: this.cellBgColor },
+            { headerName: "Dest", field: "Destination", cellStyle: { color: 'darkred' }, width: 30, sortingOrder: ['asc', 'desc'], hide: false, cellClass: this.cellBgColor },
+            { headerName: "Tour", field: "Resort", width: 30, sortingOrder: ['asc', 'desc'], hide: false, cellClass: this.cellBgColor },
+            { headerName: "Airport", field: "AirportCode", width: 40, editable: true, newValueHandler: this.textValueChangedHandler.bind(this), hide: true, cellClass: this.cellBgColor },
+            { headerName: "Tour type", field: "TourType", cellRenderer: this.genDropDown.bind(this), width: 30, sortingOrder: ['asc', 'desc'], hide: false, cellClass: this.cellBgColor, optionValues: this.TourtypeOptions },
+            { headerName: "Tl cost s", field: "RLkostnad", width: 40, editable: true, newValueHandler: this.textValueChangedHandler.bind(this), hide: false, cellClass: this.cellBgColor },
+            { headerName: "Tl cost flt", field: "KostnadRLflyg", width: 40, editable: true, newValueHandler: this.textValueChangedHandler.bind(this), hide: false, cellClass: this.cellBgColor },
+            { headerName: "Outbound", field: "ShortOutbound", width: 30, sortingOrder: ['asc', 'desc'], hide: false, cellClass: this.cellBgColor },
+            { headerName: "Homebound", field: "ShortHomebound", width: 30, hide: false, cellClass: this.cellBgColor },
+            { headerName: "CRS Bono", field: "Bokningsnummer", width: 40, editable: true, newValueHandler: this.textValueChangedHandler.bind(this), hide: false, cellClass: this.cellBgColor },
+            { headerName: "Htl/Conn", field: "OrderBoardFlight", width: 40, editable: true, newValueHandler: this.textValueChangedHandler.bind(this), hide: false, cellClass: this.cellBgColor },
+            { headerName: "PrintPnr", field: "PrintPnr", width: 90, cellRenderer: this.pnrEditor.bind(this), hide: false, cellClass: this.cellBgColor },         
+            { headerName: "Travel plan", field: "TravelPlanOk", cellRenderer: this.genDropDown.bind(this), width: 30, sortingOrder: ['asc', 'desc'], hide: false, cellClass: this.cellBgColor, optionValues: this.TravelPlanOptions },
+            { headerName: "Tour leader", field: "GuideId", valueGetter: this.guideValueGetter.bind(this), cellRenderer: this.guideDropdown.bind(this), width: 70, sortingOrder: ['asc', 'desc'], hide: false, cellClass: this.cellBgColor },
+            { headerName: "Status", field: "Status", cellRenderer: this.genDropDown.bind(this), width: 40, sortingOrder: ['asc', 'desc'], hide: false, cellClass: this.cellBgColor, optionValues: this.StatusOptions },
+            { headerName: "Booking status", field: "Ant", width: 40, editable: true, newValueHandler: this.textValueChangedHandler.bind(this), hide: false, cellClass: this.cellBgColor },
+            { headerName: "Dbl book", field: "Dubbelbok", width: 40, editable: true, newValueHandler: this.textValueChangedHandler.bind(this), hide: false, cellClass: this.cellBgColor },
+            { headerName: "Also guiding", field: "Lederaven", width: 40, editable: true, newValueHandler: this.textValueChangedHandler.bind(this), hide: false, cellClass: this.cellBgColor },
+            { headerName: "Stud", field: "StudId", valueGetter: this.studValueGetter.bind(this), cellRenderer: this.guideDropdown.bind(this), width: 70, sortingOrder: ['asc', 'desc'], hide: false, cellClass: this.cellBgColor },
+            { headerName: "Stud status", field: "StudOK", cellRenderer: this.genDropDown.bind(this), width: 40, sortingOrder: ['asc', 'desc'], hide: false, cellClass: this.cellBgColor, optionValues: this.StatusOptions },
+            { headerName: "Stud PNR/Print", field: "StudBokningsnr", width: 40, editable: true, newValueHandler: this.textValueChangedHandler.bind(this), hide: false, cellClass: this.cellBgColor },
+            { headerName: "Petty cash", field: "Reskassa", width: 40, editable: true, newValueHandler: this.textValueChangedHandler.bind(this), hide: false, cellClass: this.cellBgColor },
+            { headerName: "Travel doc", field: "MaterialsSent", width: 30, hide: false, cellClass: this.cellBgColor, cellRenderer:this.checkboxEditor.bind(this)},
+            { headerName: "Gr visa", field: "GroupVisa", width: 30, hide: false, cellClass: this.cellBgColor, cellRenderer:this.checkboxEditor.bind(this)},
+            { headerName: "Tl Visa", field: "GuideVisa", width: 30, hide: false, cellClass: this.cellBgColor, cellRenderer:this.checkboxEditor.bind(this)},
+            { headerName: "Work permit", field: "WorkPermitOk", width: 30, hide: false, cellClass: this.cellBgColor, cellRenderer:this.checkboxEditor.bind(this)},
+            { headerName: "Central accounting", field: "CentralAccounting", width: 40, editable: true, newValueHandler: this.textValueChangedHandler.bind(this), hide: false, cellClass: this.cellBgColor },
+            { headerName: "Notering", field: "Notering", width: 40, editable: true, newValueHandler: this.textValueChangedHandler.bind(this), hide: false, cellClass: this.cellBgColor },
+            
+            { headerName: "Rls bed", field: "Rlstidbadd", width: 90, hide: true, cellClass: this.cellBgColor },
+            { headerName: "Rls flt", field: "Rlstidflyg", width: 90, hide: true, cellClass: this.cellBgColor },
+            
+            { headerName: "Min", field: "Minant", width: 40, editable: true, newValueHandler: this.textValueChangedHandler.bind(this), hide: false, cellClass: this.cellBgColor },
+            { headerName: "Max", field: "Maxant", width: 40, editable: true, newValueHandler: this.textValueChangedHandler.bind(this), hide: false, cellClass: this.cellBgColor },
         ];
     }
 
@@ -40,6 +62,7 @@ export class Welcome {
             columnDefs: this.columnDefs,
             rowSelection: 'single',
             onSelectionChanged: this.onSelectionChanged,
+            onRowDoubleClicked: this.onRowDoubleClicked,
             enableColResize: true,
             enableFilter: true,
             enableSorting: true,
@@ -74,6 +97,7 @@ export class Welcome {
     }
 
     textValueChangedHandler(params) {
+        //TODO kolla om värdet ändrats?
         params.data[params.colDef.field] = params.newValue;
         if (!params.data.Dirty) {
             params.data.Dirty = true;
@@ -126,7 +150,7 @@ export class Welcome {
         eCell.className = "prewrp";
         eCell.setAttribute('contenteditable', 'true');
         eCell.setAttribute('title', params.value);
-        //eCell.className = "prewrap";
+        
         eCell.innerHTML = params.value;
 
         eCell.addEventListener('blur', evt => { this.blurPnrListener(evt, params, eCell) });
@@ -200,8 +224,7 @@ export class Welcome {
         var editing = false;
 
         var eCell = document.createElement('span');
-
-        //var eLabel = document.createTextNode(params.data.GuideName);
+        
         let field = params.colDef.field;
         let name;
         if (field === 'GuideId')
@@ -261,14 +284,10 @@ export class Welcome {
 
 
             params.data[params.colDef.field] = newValue;
-            
-            //params.data["GuideName"] = newLabel;
+                        
             params.data["Dirty"] = true;
             eLabel.nodeValue = newLabel;
-            
-            //removed remove since blur also removes
-            //eCell.removeChild(evt.target);
-                    
+                                
             eCell.appendChild(eLabel);
             editing = false;
             this.grid.refreshBody();
@@ -289,6 +308,9 @@ export class Welcome {
 
     onSelectionChanged() {
         //console.log(this.api.getSelectedRows());
+    }
+    onRowDoubleClicked(){
+        console.log('you double clicked, wanna edit?');
     }
 
     canDeactivate() {
