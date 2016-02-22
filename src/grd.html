@@ -1,21 +1,37 @@
 <template>
     <section class="au-animate">
-                <div class="btn-group">
-                    <!--<button type="button" class="btn btn-primary" title="Selected countries ${selectedCountryNames()}" dropdown-toggle"" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-globe"></i></button>-->
-                    <button type="button" class="btn btn-primary dropdown-toggle" title="Select countries" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Columns <span class="caret"></span>
-                        <span class="sr-only">Toggle Dropdown</span>
-                    </button>
-                    <ul class="dropdown-menu" style="margin-left:10px">
-                        <li repeat.for="col of columnDefs" click.delegate="$parent.selectVisibleCol(col)">
-                            <a href="#" class="small" data-value="${col.headerName}" tabIndex="-1">
-                                <i class="fa fa fa-check-square-o" if.bind="!col.hide"></i>
-                                <i class="fa fa fa-square-o" if.bind="col.hide"></i> ${col.headerName} 
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-        
+        <div class="btn-group">
+            <button type="button" class="btn btn-primary dropdown-toggle" title="Select countries" data-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false">
+                Columns <span class="caret"></span>
+                <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu" style="margin-left:10px">
+                <li repeat.for="col of columnDefs" click.delegate="$parent.selectVisibleCol(col)">
+                    <a href="#" class="small" data-value="${col.headerName}" tabIndex="-1">
+                        <i class="fa fa fa-check-square-o" if.bind="!col.hide"></i>
+                        <i class="fa fa fa-square-o" if.bind="col.hide"></i> ${col.headerName}
+                    </a>
+                </li>
+            </ul>
+        </div>
+       
+        <div class="btn-group">
+            <button type="button" class="btn btn-primary dropdown-toggle" title="Select seasons" data-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false">
+                ${selectedSeasonDescription.join(', ' )} <span class="caret"></span>
+                <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu" style="margin-left:10px">
+                <li repeat.for="season of seasons" click.delegate="$parent.setSelectedSeason(season)">
+                    <a href="#" class="small" data-value="${season.SeasonDescription}" tabIndex="-1">
+                        <i class="fa fa fa-check-square-o" if.bind="season.Selected">${season.SeasonDescription}</i>
+                        <i class="fa fa fa-square-o" if.bind="!season.Selected">${season.SeasonDescription}</i> 
+                    </a>
+                </li>
+            </ul>
+        </div>
+
         <div id="myGrid" style="height: 800px;" class="ag-blue"></div>
 
         <form role="form" submit.delegate="submit()">

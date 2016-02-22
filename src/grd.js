@@ -9,8 +9,10 @@ export class Welcome {
         this.apiService = apiService;
         this.plans = [];
         this.guides = [];
+        this.seasons = [];
         this.gridOptions = {};
         this.statusOptions = ['Ok', '?', 'x'];
+        this.selectedValues = ['x', 'STR'];
         this.tourtypeOptions = ['x', 'CYK', 'KRY', 'RUN', 'SAF', 'STR'];
         this.travelPlanOptions = ['x', 'Pågående', 'Klar'];
         this.columnDefs = [
@@ -70,10 +72,13 @@ export class Welcome {
 
         var eGridDiv = document.querySelector('#myGrid');
         this.grid = new Grid(eGridDiv, this.gridOptions);
-
-        
-        //this.gridOptions.api.sizeColumnsToFit();
     }
+
+   get selectedSeasonDescription(){
+       return this.seasons
+            .filter((season) => { return season.Selected })
+            .map((filtredSeason) => { return filtredSeason.SeasonDescription });
+   }                                 
 
     cellBgColor(params) {
         if (params.data.Cancelled)
@@ -98,7 +103,9 @@ export class Welcome {
 
     textValueChangedHandler(params) {
         //TODO kolla om värdet ändrats?
-        params.data[params.colDef.field] = params.newValue;
+        if (params.data[params.colDef.field] != params.newValue)
+            params.data[params.colDef.field] = params.newValue;
+
         if (!params.data.Dirty) {
             params.data.Dirty = true;
             this.grid.refreshBody();
@@ -121,12 +128,25 @@ export class Welcome {
         col.hide = !col.hide;
     }
 
+    setSelectedSeason(season) {
+        season.Selected = !season.Selected;
+        let selectedSeasons = this.seasons
+            .filter((season) => { return season.Selected })
+            .map((filtredSeason) => { return filtredSeason.CrsSeasonCode });
+
+        this.apiService.getPlans(selectedSeasons.join('.'))
+            .then(plans => this.plans = plans)
+            .then(() => this.grid.setRowData(this.plans));
+    }
+
     activate() {
 
         this.apiService.getPlans('A')
             .then(plans => this.plans = plans)
             .then(() => this.apiService.getGuides())
             .then(guides => this.guides = guides)
+            .then(() => this.apiService.getSeasons())
+            .then(seasons => this.seasons = seasons)
             .then(() => this.initGrid());
         // .catch(error => {
         //     console.log(error.response);

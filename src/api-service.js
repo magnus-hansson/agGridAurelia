@@ -41,5 +41,14 @@ export class ApiService {
                 return data;
             });
     }
+
+    getSeasons() {
+        return this.http.fetch('seasonapi/withdefault')
+            .then(response => response.json())
+            .then(data => {
+                return data;
+            });
+    }
+   
 }
 
